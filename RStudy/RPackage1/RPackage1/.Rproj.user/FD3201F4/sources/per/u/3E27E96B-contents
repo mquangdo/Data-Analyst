@@ -1,0 +1,17 @@
+foo <- c(1.1,2,3.5,3.9,4.2)
+bar <- c(2,2.2,-1.3,0,0.2)
+plot(foo, bar)
+baz = rbind(foo, bar)
+baz
+plot(baz)
+plot(foo,bar,type="b")
+plot(foo,bar,type="b",main="My lovely plot",xlab="x axis label",
+     ylab="location y")
+plot(foo,bar,type="b",main="My lovely plot\ntitle on two lines",xlab="",
+     ylab="")
+plot(foo,bar,type="b",main="My lovely plot",xlab="",ylab="",col=2)
+plot(foo,bar,type="b",main="My lovely plot",xlab="",ylab="",col="seagreen4")
+plot(foo,bar,type="b",main="My lovely plot",xlab="",ylab="",col="seagreen4", lty ='dashed')
+plot(foo,bar,type="b",main="My lovely plot",xlab="",ylab="",col="seagreen4",lty="dotted")
+plot(foo,bar,type="b",main="My lovely plot",xlab="",ylab="",col="seagreen4",lty =6, pch = 19 )
+

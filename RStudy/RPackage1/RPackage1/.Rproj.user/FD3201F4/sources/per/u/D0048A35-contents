@@ -1,0 +1,95 @@
+#Bai7
+dayso = seq(2, 100, 2)
+dayso
+
+dayso2 = c(rep(3, 4), rep(5,10), rep(6,17))
+dayso2
+
+dayso3 = c(rep(c(1,2,3), 8))
+dayso3           
+
+bien3bac = rep(c('IT','NHIEU','BT'), each = 3)
+bien3bac
+
+
+#Bai9
+sample(40, 5)
+
+#Bai10
+count_down = 0
+for (i in 1:50){
+  r = sample(2,1, replace = TRUE)
+  if (r == 1){
+    count_down = count_down + 1
+  }
+}
+count_down
+
+#Bai11
+count_six = 0
+for (i in 1:100){
+  r = sample(6, 1, replace = TRUE)
+  if (r == 6) {
+    count_six = count_six + 1
+  }
+}
+count_six
+
+
+#Bai5
+
+DuLieu = data.frame(c)
+DuLieu
+
+#view DL
+View(DL)
+attach(DL)
+DL$GioiTinh
+ncol(DL) #tinh so cot
+nrow(DL) #tinh so hang
+DL[,3] #cot 3
+DL[10,]#hang 10
+nrow(subset(DL, DL$GioiTinh == "Nam")) #so hs nam
+nrow(subset(DL, DL$GioiTinh == "Nu"))  #so hs nu
+r = c(sample(475, 50))  #vecto random
+DL[r,]  #lay ra cac ham co chi so nam trong vector random
+
+
+#Bai12
+condit = TRUE
+while(condit){
+  r = c(sample(52,5))
+  for (i in r){
+    for (j in r[-1]){
+      if (abs(i - j) %% 13 ==0){
+        condit = FALSE
+        return(r)
+      }
+    }
+  }
+}
+r
+
+
+
+#Bai6
+DL = load("C:\\Users\\Asus\\Downloads\\HocSinh (2).rda")
+View(DL)
+a = nrow(DL) #=475
+r = c(sample(a, 50))
+DL[r,]
+getwd()
+setwd("C://Users//Asus//Documents//RStudy//RPackage1//RPackage1")
+save(DL, file = "HocSinh3.rda")
+
+
+#Bai7
+dayso = seq(0,100,2)#b
+dayso
+1:100 #a
+rep(c(3,5,16), times = c(4,10,7))#c
+rep(c(1,2,3,4), each = 10)#d
+rep(c(1,2,3), times = 8)#e
+
+c = 1:100
+c%%9

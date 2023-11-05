@@ -1,0 +1,846 @@
+---
+title: "Tiền xử lý dữ liệu trên R"
+author: "Nguyễn Thị Phương Mai"
+date: '2023-09-19'
+output:
+  html_document: default
+  word_document: default
+editor_options:
+  markdown:
+    wrap: 72
+---
+
+## 1. Véc tơ dữ liệu
+
+### 1.1. Nhập dữ liệu dạng véc tơ
+
+Để nhập một dữ liệu dạng véc tơ trong R, ta có thể dùng hàm ***c*** hoặc
+hàm ***scan***. Giả sử ta có một véc tơ chỉ số lỗi chính tả trong $10$
+trang sách đầu tiên của một cuốn sách:
+$$2 \quad 3 \quad 0 \quad 5 \quad 1\quad  0 \quad 7\quad  0\quad  2\quad  7$$
+Dữ liệu trên có thể được nhập vào R bằng hàm ***c*** như sau:
+
+```{r}
+SoLoi = c(2, 3, 0, 5, 1, 0, 7, 0, 2, 7)
+SoLoi
+is.vector(SoLoi)
+```
+
+Hoặc nhập bằng hàm ***scan***:
+
+```{r }
+SoLoi = scan()
+## (ENTER hai lần để kết thúc việc nhập dữ liệu)
+SoLoi
+is.vector(SoLoi)
+```
+
+Chú ý: Khi nhập dữ liệu bằng hàm c hoặc hàm ***scan***, ta nên lưu ý sự
+khác biệt của hai hàm này như sau:
+
+Hàm ***c*** có thể nhập dữ liệu dạng kí tự nhưng hàm scan chỉ nhập được
+dữ liệu dạng số.
+
+```{r}
+GioiTinh = c("Nam", "Nu", "Nu", "Nam")
+GioiTinh
+GioiTinh = scan()
+```
+
+*Hàm scan, trong một số trường hợp, giúp ta có thể copy dữ liệu từ những
+cột trong những tệp có sẵn từ excel file, text file,... nhưng ta không
+áp dụng được những thao tác kiểu này cho hàm* **c**\*.
+
+### 1.2. Biên tập dữ liệu
+
+Mỗi phần tử trong một véc tơ được xác định bởi địa chỉ là thứ tự của
+phần tử đó trong véc tơ. Ta có thể thay đổi, thêm vào hay bớt đi một số
+phần tử của véc tơ bằng cách truy cập vào địa chỉ của những phần tử đó.
+Chẳng hạn, trên véc tơ **SoLoi** ta có thể thực hiện:
+
+```{r}
+ ##Sao chép SoLoi sang SoLoi1
+ SoLoi1 = SoLoi
+ SoLoi1
+ ##Sửa số lỗi ở trang đầu tiên thành 1
+ SoLoi1[1] = 1
+ SoLoi1
+ ##Sửa số lỗi trong trang 2,4,6
+ SoLoi1[c(2,4,6)]=c(1,2,3)
+ SoLoi1
+```
+
+Ta cũng có thể thêm vào hay bớt đi một số phần tử của véc tơ:
+
+```{r}
+ SoLoi1[11:15] = c(1, 2, 0, 3, 1) ## thêm số lỗi của 5 trang sau
+ SoLoi1
+ SoLoi1[-(1:3)] ## bỏ ra khỏi véc tơ số lỗi 3 trang đầu tiên
+```
+
+hoặc cũng có thể ghép nhiều véc tơ dữ liệu lại với nhau:
+
+```{r}
+ SoLoi1 = SoLoi
+ SoLoi2 = c(1, 4, 0, 5, 2, 3, 1, 0, 2, 5) ## Số lỗi trong 10 trang kế tiếp
+ GhepSoLoi = c(SoLoi1, SoLoi2)
+ GhepSoLoi
+```
+
+Tương tự, để ghép $n$ véc tơ dữ liệu có tên $x_1; x_2; ...; x_n$ lại với
+nhau theo thứ tự này, ta dùng hàm ***c*** như trên:
+$z = c(x1, x2,.., xn)$
+
+Ngoài cách truy cập vào địa chỉ, ta có thể sửa, thêm, bớt phần tử của
+véc tơ bằng hàm ***edit***. Chẳng hạn để biên tập véc tơ ***SoLoi*** và
+lưu kết quả vào véc tơ có tên ***SoLoi3*** ta làm như sau:
+
+```{r}
+SoLoi3=edit(SoLoi)
+```
+
+### 1.3. Truy cập dữ liệu
+
+Để truy cập vào một véc tơ ta có thể tham khảo bảng lệnh sau:
+![](E:\Teaching\Introduction to data analysis\Lectures 2023-2024\Lý thuyết\Tiền xử lý dữ liệu trên R\h1.png)
+![](E:\Teaching\Introduction to data analysis\Lectures 2023-2024\Lý thuyết\Tiền xử lý dữ liệu trên R\h2.png) Đoạn
+lệnh sau cho ta một số thông tin khi truy cập vào véc tơ chỉ số lỗi của
+$10$ trang đánh máy trên:
+
+```{r}
+ ##Số trang tìm lỗi
+length(SoLoi)
+ ##Số lỗi ở trang thứ 5
+ SoLoi[5]
+ ##Số lỗi ở trang 2, 5, 7
+ SoLoi[c(2,5,7)]
+ ##Những số lỗi lớn hơn 3
+ SoLoi[SoLoi>3]
+ ##hoặc
+subset(SoLoi,SoLoi>3)
+ ##Những số lỗi lớn hơn 3 và nhỏ hơn 6
+SoLoi[SoLoi>3&SoLoi<6]
+##hoặc
+ subset(SoLoi,SoLoi>3&SoLoi<6)
+ ##Số trang có số lỗi lớn hơn 3
+ sum(SoLoi > 3)
+ ##Những trang không có lỗi nào
+ which(SoLoi == 0)
+ ##Những trang có lớn hơn hay bằng 3 lỗi
+ which(SoLoi >=3)
+ ##Những trang có nhiều lỗi nhất
+ which(SoLoi == max(SoLoi))
+ ##Số lỗi lớn nhất
+ ##Trang đầu tiên có nhiều lỗi nhất
+ which.max(SoLoi == max(SoLoi))
+```
+
+### 1.4. Loại bỏ số liệu trống
+
+Trong trường hợp tập dữ liệu có chứa số liệu trống *NA* (Not Available)
+ta có thể loại những số liệu trống đó bằng hàm ***na.omit***. Chẳng hạn,
+khi nhập thêm số lỗi của $5$ trang đánh máy tiếp theo nhưng số liệu thứ
+$13$ bị trống:
+
+```{r}
+SoLoi2 = c(1, 0, NA, 5, 2)
+is.na(SoLoi2)
+sum(SoLoi2)
+```
+
+Ta loại đi số liệu trống ở trang thứ $13$ như sau:
+
+```{r}
+SoLoi3 = na.omit(SoLoi2)
+SoLoi3
+sum(SoLoi3)
+```
+
+### 1.5. Chuyển dữ liệu số thành dữ liệu định danh
+
+Giả sử ta đánh giá về số lỗi của một trang đánh máy thành ba mức: ít
+(dưới $2$ lỗi), bình thường (từ $2$ đến $5$ lỗi), nhiều (trên $5$ lỗi).
+Ta tạo ra véc tơ định danh **PhanLoai** để mã hóa véc tơ **SoLoi** với
+ba mức **IT, BT, NHIEU** như sau:
+
+```{r}
+ SoLoi = c(2, 3, 0, 5, 1, 0, 7, 0, 2, 7)
+ PhanLoai = SoLoi
+ ##Trước khi mã hóa
+ PhanLoai
+ ##Mã hóa
+ PhanLoai[SoLoi < 2] = "IT"
+ PhanLoai[SoLoi>= 2 & SoLoi <= 5] = "BT"
+ PhanLoai[SoLoi > 5] = "NHIEU"
+ ##Sau khi mã hóa
+ PhanLoai
+```
+
+Ta có thể kết hợp hai véc tơ **SoLoi** và **PhanLoai** thành một bảng dữ
+liệu (data frame) bằng hàm ***data.frame***:
+
+```{r}
+data.frame(SoLoi,PhanLoai)
+```
+
+### 1.6. Biến đổi véc tơ định danh thành véc tơ nhân tố
+
+Véc tơ **PhanLoai** trên đây là một véc tơ định danh với giá trị là
+những xâu kí tự. Để chuyển véc tơ **PhanLoai** này thành véc tơ lưu dữ
+liệu dạng thứ bậc, ta dùng hàm ***factor***:
+
+```{r}
+PhanLoai = factor(PhanLoai, level=c("IT", "BT", "NHIEU"))
+PhanLoai
+```
+
+## 2. Bảng Dữ liệu
+
+### 2.1. Nhập dữ liệu dạng bảng
+
+Giả sử ta có một tập dữ liệu dạng bảng cho thông tin về chiều cao, cân
+nặng và giới tính của 5 sinh viên như sau:
+
+![](E:\Teaching\Introduction to data analysis\Lectures 2023-2024\Lý thuyết\Tiền xử lý dữ liệu trên R\h3.png)
+
+Dữ liệu trên có thể được nhập thành một bảng (data frame) trong R bằng
+cách nhập từng cột vào một véc tơ rồi ghép chúng lại với nhau bằng hàm
+***data.frame***:
+
+***data.frame(..., row.names, stringsAsFactors)***
+
+trong đó
+
+**...:** tên các cột của bảng dữ liệu.
+
+**row.names:** tên các dòng.
+
+**stringsAsFactors:** tham số logic, TRUE/FALSE tương ứng có/không
+chuyển các biến kiểu xâu kí tự thành yếu tố.
+
+```{r}
+ChieuCao = c(170, 165, 150, 158, 166)
+CanNang = c(65, 50, 45, 60, 53)
+GioiTinh = c("Nam", "Nam", "Nu", "Nu", "Nam")
+DuLieu = data.frame(ChieuCao, CanNang, GioiTinh)
+View(DuLieu)
+is.data.frame(DuLieu)
+```
+
+Ngoài cách trên ta có thể nhập dữ liệu vào bảng dữ liệu trong R bằng
+cách sử dụng hàm ***edit***. Để nhập dữ liệu theo cách này, tại cửa sổ
+dòng lệnh ta gõ lệnh:
+
+```{r}
+#DuLieu = edit(data.frame())
+#View(DuLieu)
+```
+
+Để nhập dữ liệu, chẳng hạn cho cột **ChieuCao**, đầu tiên nhấp chuột vào
+ô **var1** để mở cửa sổ **Variable editor**, tại cửa sổ này chọn tên cột
+và kiểu dữ liệu cho cột:
+
+-   Chọn **variable name** là **ChieuCao**;
+
+-   Chọn type là **numeric**.
+
+và sau đó nhập dữ liệu vào trong các ô của cột. Nhập dữ liệu cho các cột
+còn lại cũng được tiến hành tương tự. Để kết thúc việc nhập dữ liệu, ta
+đóng cửa sổ biên tập dữ liệu và khi đó trong cửa sổ dòng lệnh **R
+Console** đã có một đối tượng tên là ***DuLieu***.
+
+### 2.2. Biên tập dữ liệu
+
+Trong một bảng dữ liệu, mỗi dòng, mỗi cột đều được xác định bởi địa chỉ
+là thứ tự hoặc tên của dòng, cột đó. Địa chỉ của mỗi ô trong bảng dữ
+liệu được xác định bởi địa chỉ của dòng và cột chứa ô đó. Địa chỉ của
+dòng, cột, ô được khai báo trong kí hiệu [,]. Sau đây ta minh họa một số
+thao tác thay đổi, thêm bớt dữ liệu trên bảng ***DuLieu***.
+
+```{r}
+DuLieu1=DuLieu
+##Đổi tên cho các cột bằng hàm colnames hoặc names
+colnames(DuLieu1) = c("CC","CN","GT")
+View(DuLieu1)
+```
+
+```{r}
+##Đặt tên cho các dòng bằng hàm rownames
+rownames(DuLieu1) = c("Vu", "Hieu", "Hoa", "Thuy", "Nam")
+View(DuLieu1)
+```
+
+```{r}
+## Sửa chiều cao của sinh viên thứ 3 thành 160 (sửa ô ở dòng 3, cột 1)
+DuLieu[3,1]=160
+View(DuLieu)
+```
+
+Như đã nói trên, địa chỉ **DuLieu[3,1]** có thể khai báo theo những cách
+khác: **DuLieu["3","ChieuCao"]** hoặc **DuLieu[3,"ChieuCao"]** hoặc
+**DuLieu["3",1]**.
+
+Khi muốn thêm vào bảng dữ liệu một số cột, chẳng hạn thêm cột quê quán
+và tuổi của 5 sinh viên nói trên, ta làm như sau:
+
+```{r}
+##Nhập dữ liệu cột quê quán và cột tuổi
+QueQuan = c("HaNoi", "QuangNinh", "NgheAn", "NamDinh", "LangSon")
+Tuoi = c(23, 22, 20, 25, 19)
+## Ghép hai cột quê quán và tuổi vào bảng dữ liệu
+DuLieu2 = data.frame(DuLieu, QueQuan, Tuoi)
+View(DuLieu2)
+```
+
+Hoặc ta cũng có thể ghép thêm cột vào bảng dữ liệu theo cách sau:
+
+```{r}
+DuLieu[,4:5] = c(QueQuan, Tuoi)
+View(DuLieu)
+```
+
+sau đó đổi tên hai cột cuối:
+
+```{r}
+colnames(DuLieu)[4:5]=c("QueQuan", "Tuoi")
+View(DuLieu)
+```
+
+Việc thêm một số dòng vào bảng dữ liệu được làm tương tự như đối với
+cột. Ngoài ra, ta có thể thực hiện việc thêm cột hay dòng vào bảng dữ
+liệu nhờ hàm **cbind** (cho cột) và **rbind** (cho dòng). Cách dùng hai
+hàm này được minh họa qua đoạn lệnh sau:
+
+```{r}
+DuLieu = data.frame(ChieuCao, CanNang, GioiTinh)
+##Ghép thêm cột quê quán và tuổi
+DuLieu2 = cbind(DuLieu, QueQuan, Tuoi)
+View(DuLieu2)
+DuLieuThem=data.frame(ChieuCao =c(150,170),CanNang=c(48,70),GioiTinh=c("Nu","Nam"),QueQuan=c("CaoBang","HaNoi"),Tuoi=c(21,19))
+View(DuLieuThem)
+DuLieu3 = rbind(DuLieu2, DuLieuThem)
+View(DuLieu3)
+```
+
+Sử dụng địa chỉ của ô, dòng, cột để thay đổi, thêm hoặc bớt dữ liệu vào
+bảng rất tiện lợi đối với những bảng dữ liệu cỡ lớn. Đối với bảng dữ
+liệu cỡ nhỏ, ta có thể sử dụng hàm **edit** hoặc dùng hàm **fix** để
+thực hiện các thao tác trên. Chẳng hạn, để sửa bảng DuLieu, ta làm như
+sau:
+
+```{r}
+#DuLieu3 = edit(DuLieu)
+#Hoặc
+#DuLieu3=fix(DuLieu)
+```
+
+### 2.3. Truy cập dữ liệu
+
+Trong phần này, ta sẽ thực hiện các thao tác trên bảng dữ liệu
+**DuLieu** để minh họa cách truy cập vào một bảng dữ liệu trong R. Ta có
+thể tham khảo một số lệnh cơ bản trong bảng sau:
+
+![](E:\Teaching\Introduction to data analysis\Lectures 2023-2024\Lý thuyết\Tiền xử lý dữ liệu trên R\h4.png)
+
+Đoạn lệnh sau cho một số thông tin của nhóm sinh viên khi truy cập vào bảng **DuLieu**.
+
+```{r}
+##Tên các cột
+names(DuLieu)
+##Số dòng và số cột
+dim(DuLieu)
+##Chiều cao của sinh viên thứ 4
+DuLieu[4,1]
+## Dữ liệu về sinh viên thứ 3
+DuLieu[3,]
+##Thông tin về sinh viên thứ 2 và thứ 5
+DuLieu[c(2,5),]
+##Thông tin về giới tính của nhóm sinh viên
+DuLieu[,3]
+```
+
+Ngoài ra, ta có thể sử dụng toán tử \$ hoặc hàm **attach** để lấy ra các
+cột của dữ liệu như sau:
+
+```{r}
+##Thông tin về giới tính của nhóm sinh viên
+##GioiTinh
+DuLieu$GioiTinh
+attach(DuLieu)
+ChieuCao
+```
+
+Ta cũng có thể đưa ra những phần tử trong bảng dữ liệu thỏa mãn một hoặc
+một số điều kiện nào đó bằng cách sử dụng hàm **subset**. Chẳng hạn để
+lấy dữ liệu về những sinh viên nữ, ta thực hiện:
+
+```{r}
+subset(DuLieu,GioiTinh == "Nu")
+subset(DuLieu,GioiTinh=="Nam"&ChieuCao>160)
+DuLieu[GioiTinh == "Nam" & ChieuCao > 160,]
+#Sử dụng hàm attach để lấy từng cột của dữ liệu như lấy ra một dữ liệu:
+attach(DuLieu)
+GioiTinh
+DuLieu[GioiTinh == "Nam" & ChieuCao > 160,]
+```
+
+### 2.4. Loại bỏ số liệu trống
+
+Tương tự trường hợp dữ liệu dạng véc tơ, hàm **na.omit** được dùng để
+loại đi số liệu trống **(NA)** trong bảng dữ liệu. Chẳng hạn ta có bảng
+dữ liệu:
+
+```{r}
+DuLieuMoi=data.frame(ChieuCao=c(170,NA,150,158,166,160),CanNang=c(65,50,45,60,53,50),GioiTinh=c("Nam","Nam","Nu","Nu","Nam",NA))
+View(DuLieuMoi)
+```
+
+Ta loại đi dữ liệu trống trong bảng:
+
+```{r}
+DuLieuMoi1=na.omit(DuLieuMoi)
+View(DuLieuMoi1)
+```
+
+và kết quả cho ta thấy R loại bỏ toàn bộ dòng chứa dữ liệu trống.
+
+Để thống kê số lượng ô bị thiếu dữ liệu ở từng cột, chúng ta sử dụng hàm
+**is.na()** và hàm **colSums()**:
+
+```{r}
+is.na(DuLieuMoi)
+colSums(is.na(DuLieuMoi))
+```
+
+Để thay thế dữ liệu định lượng bị thiếu bằng các giá trị khác (ví dụ: giá trị trung bình), ta sử dụng các hàm của R để làm việc này:
+
+```{r}
+DuLieuMoi$ChieuCao[is.na(DuLieuMoi$ChieuCao)]=mean(DuLieuMoi$ChieuCao,na.rm=TRUE)
+View(DuLieuMoi)
+```
+
+### 2.5. Tạo dữ liệu
+
+R cung cấp rất nhiều hàm tạo dữ liệu theo những yêu cầu nhất định. Trong
+mục này, ta giới thiệu một số hàm tạo dữ liệu đơn giản hay sử dụng trong
+R như: **seq, rep,** .
+
+#### 2.5.1.Tạo dãy số cách đều bằng hàm ***seq***
+
+Để tạo dãy số cách đều ta có thể dùng hàm seq bằng những cách sau:
+
+**seq(from, to, by),**
+
+**seq(length, from, by)**
+
+**seq(length, from, to)**
+
+trong đó
+
+**from**: giá trị bắt đầu của dãy số.
+
+**to**: giá trị chặn trên của dãy số.
+
+**by**: khoảng cách giữa các số trong dãy.
+
+**length**: số phần tử của dãy số.
+
+```{r}
+## Tạo một dãy số từ 2 đến 5 cách nhau 0.5
+seq(from = 2, to = 5, by = 0.5)
+## hoặc
+seq(2, 5, 0.5)
+## Tạo một dãy số xuất phát từ 2, bị chặn trên bởi 5.3, cách nhau 0.5
+seq(2, 5.3, 0.5)
+## Tạo một dãy số độ dài 8, bắt đầu từ 4 cách nhau 3
+seq(length = 8, from = 4, by = 3)
+## Tạo một dãy số độ dài 5, cách đều nhau từ 4 đến 6
+seq(length = 5, from = 4, to = 6)
+```
+
+Khi các phần tử trong dãy cách nhau 1, ta có thể làm như sau:
+
+```{r}
+seq(1,10)
+##hoặc
+1:10
+```
+
+#### 2.5.2.Tạo dãy lặp lại bằng hàm ***rep***
+
+**rep(x,times)**
+
+trong đó
+
+**x**: véc tơ các giá trị được lặp lại.
+
+**times**: véc tơ chỉ số lần lặp lại.
+
+```{r}
+##Tạo dãy số 8 lặp 5 lần
+rep(8, times = 5)
+##Tạo dãy số 1,2,3,4 lặp lại 3 lần
+rep(1:4, times = 3)
+##Tạo dãy số 1,2,3,4, mỗi số lặp lại 3 lần
+rep(1:4, each=3)
+##Tạo dãy chữ cái trong đó chữ a lặp 2 lần, chữ b lặp 3 lần, chữ c lặp 4 lần
+rep(c("a","b","c"),c(2,3,4))
+```
+
+### 2.6. Đọc dữ liệu 
+
+#### 2.6.1. Nhập dữ liệu trực tiếp
+
+```{r}
+age <- c(50, 62, 60, 40, 48, 47, 57, 70, 48)
+insulin <- c(16.5, 10.8, 32.3, 19.3, 14.2, 11.3, 15.5, 15.8, 16.2)
+data = data.frame(age,insulin)
+data
+View(data)
+```
+
+#### 2.6.2. Nhập dữ liệu từ Excel (File.csv)
+
+Khi nhập dữ liệu vào excel, thông thường tệp chứa dữ liệu có đuôi .xls,
+để đọc những tệp này từ R ta làm như sau
+
+-   Trước hết ta lưu tệp dưới dạng đuôi **.csv**.
+
+-   Đọc tệp có phần đuôi **.csv** từ R bằng hàm **read.csv**
+
+**read.csv(link, header)**
+
+trong đó
+
+**link**: đường link thư mục lưu trữ tệp dữ liệu dạng file.csv.
+
+**header**: tham số logic TRUE/FALSE chỉ dòng đầu tiên trong dữ liệu
+có/không phải tên của các cột, mặc định header = TRUE.
+
+```{r}
+#FastFood=read.csv("E:\Teaching\Introduction to data analysis\Lectures 2023-2024\Dữ liệu trong bài giảng\fastfood.csv",header=T)
+#View(FastFood)
+```
+
+### 2.6.3. Nhập dữ liệu từ file Excel (File.xlsl)
+
+```{r}
+#library(readxl)
+#FastFood= read_excel("E:/Teaching/Introduction to data analysis/Lectures 2023-2024/Dữ liệu trong bài giảng/fastfood.xlsx")
+#View(FastFood)
+```
+
+#### 2.6.4. Đọc dữ liệu từ packages
+
+```{r}
+#library(MASS)
+#Boston=Boston
+#View(Boston)
+```
+
+### 2.7. Lưu dữ liệu
+
+Ngoài ra, R có rất nhiều hàm giúp chúng ta lưu dữ data frame dưới các
+định dạng tệp khác nhau \*\* file rda,csv,xlsx:\*\*
+
+```{r}
+##Chọn thư mục để lưu dữ liệu
+#setwd("E:/Teaching/Introduction to data analysis/Lectures 2023-2024/Dữ liệu trong bài giảng")
+##Thực hiện lưu dữ liệu
+#save(Boston, file = "Boston.rda")
+```
+
+```{r}
+#write.csv(Boston, "Boston.csv")
+```
+
+Ngoài ra chúng ta có thể xuất file dưới định dạng .xlsx bằng lệnh
+"write_xlsx()" nằm trong gói "writexl".
+
+```{r}
+##install.packages("writexl")
+#library(writexl)
+#write_xlsx(Boston,"Boston.xlsx")
+```
+
+###2.8. Mã hóa dữ liệu định tính
+
+Lấy dữ liệu **mtcars** trong tạp chí Motor Trend US 1974. Trong dữ liệu này, biến “am” là kiểu hộp số được mã hóa với 2 giá trị 0 (automatic), 1(manual). Chúng ta sẽ mã hóa lại biến số am thành dạng nhân tố (factor) với tên lần lượt là “automatic” và “manual” và gán cho một biến số mới có tên là “trans”.
+```{r}
+data=mtcars
+is.numeric(data$am)
+data$trans=factor(data$am, levels=c(0,1),labels=c("Automatic","Manual"))
+View(data)
+```
+###2.9. Rời rạc hóa dữ liệu định lượng
+
+Giả sử chúng ta muốn rời rạc hóa dữ liệu công suất của 32 dòng ô tô thành 3 nhóm: cao (H), trung bình (M), thấp (L) và gán các giá trị này vào một biến số mới có tên “power”. Ta sử dụng hàm **cut**:
+```{r}
+data$power = cut(data$hp, breaks=c(-Inf, 96.5, 180, Inf), labels=c("L","M","H"))
+View(data)
+```
+
+### 2.10. Chọn mẫu ngẫu nhiên
+
+Khi muốn thực hiện phép chọn mẫu ngẫu nhiên, ta dùng hàm **sample** với
+những tham số chính như sau:
+
+**sample(x, size, replace, prob)**
+
+trong đó
+
+*x:* véc tơ gồm những phần tử dùng để chọn mẫu, hoặc một số nguyên
+dương.
+
+*size:* số nguyên dương chỉ số phần tử trong mẫu.
+
+*replace:* tham số logic, TRUE/FALSE chỉ việc chọn mẫu có/không hoàn
+lại, mặc định replace=FALSE.
+
+*prob* véc tơ cho biết xác suất được chọn của những phần tử trong x.
+
+Đoạn lệnh sau cho ta một số kết quả chọn ngẫu nhiên ra 10 phần tử từ
+tổng thể gồm 200 phần tử được đánh số từ 1 tới 200:
+
+```{r}
+##Chọn mẫu gồm 10 phần tử từ 200 phần tử
+sample(1:200, 10)
+##Chọn mẫu khác gồm 10 phần tử từ 200 phần tử
+sample(1:200, 10)
+##Chọn mẫu gồm 10 phần tử có hoàn lại từ 200 phần tử
+sample(1:200, 10, replace=T)
+```
+
+Giả sử ta có một hộp gồm 3 quả bóng: xanh (X), đỏ (D), vàng (V). Tiến
+hành chọn (có hoàn lại) ngẫu nhiên 5 quả bóng, kết quả có thể là:
+
+```{r}
+sample(c("X","D","V"), 5, replace=T)
+```
+
+Chọn ra 5 phần tử từ tổng thể gồm 3 phần tử mà xác suất được chọn của
+chúng lần lượt là 0.5,0.3 và 0.2:
+
+```{r}
+sample(3, 5, prob=c(0.5,0.3,0.2), replace=T)
+```
+
+Chú ý:
+
+- Vì việc chọn mẫu là ngẫu nhiên nên có thể cùng một lệnh chọn mẫu nhưng với những lần chọn khác nhau cho ta kết quả là khác nhau. Trong trường hợp muốn cố định mẫu được chọn để dùng lại trong các lần sau, ta dùng hàm **set.seed(n)**, trong đó **n** là một số nguyên dương dùng để cố định mẫu.
+
+```{r}
+##Đặt tên mẫu
+set.seed(20100612)
+sample(1:200, 10)
+##Không gọi lại tên mẫu, kết quả là một mẫu khác
+sample(1:200, 10)
+##gọi lại tên mẫu và được mẫu như cũ
+set.seed(20100612)
+sample(1:200, 10)
+```
+
+- Hàm sample cho ta cách chọn mẫu từ một véc tơ. Trong trường hợp muốn chọn mẫu từ một nhóm đối tượng có dữ liệu chứa trong một bảng dữ liệu, đầu tiên ta áp dụng hàm **sample** cho véc tơ chỉ số thứ tự của các đối tượng, sau đó lấy từ bảng ra những quan sát có thứ tự đã chọn được.
+
+Chẳng hạn với bảng **DuLieu** gồm thông tin của 5 sinh viên cho trong phần trước, để chọn ngẫu nhiên ra 3 sinh viên từ bảng này, ta thực hiện
+như sau:
+
+```{r}
+View(DuLieu)
+##Chọn thứ tự các sinh viên trong mẫu
+Mau = sample(1:5, 3)
+Mau
+##Lấy ra những sinh viên với thứ tự trong mẫu
+DLMau = DuLieu[Mau, ]
+View(DLMau)
+```
+
+### 2.11. Lập trình cơ bản trong R
+
+#### 2.11.1. Câu lệnh If
+
+**if (test_expression){**
+
+**statement**
+
+**}**
+Cho trước $x$. Kiểm tra xem $x$ có là số dương hay không?
+```{r}
+x=7
+if(x>0){
+  print("x là Số dương")
+}
+```
+#### 2.11.2. Câu lệnh If...else
+
+**if (test_expression){**
+
+**statement1**
+
+**} else {**
+
+**statement2**
+
+**}**
+Cho trước $x$. Kiểm tra xem $x$ là số không âm hay số âm?
+```{r}
+x=-7
+if(x>=0){
+  print("x là số không âm")
+}else{
+  print("x là số âm")
+}
+```
+#### 2.11.3. Câu lệnh If...else Ladder
+
+**if (test_expression){**
+
+**statement1**
+
+**} else if {**
+
+**statement2**
+
+**} else if (test_expression3){**
+
+**statement3**
+
+**} else {**
+
+**statement4**
+
+**}**
+Cho trước $x$. Kiểm tra xem $x$ là số dương, số âm hay bằng 0?
+```{r}
+x=7
+if (x>0){
+  print("x là số dương")
+} else if (x==0){
+  print("x bằng 0")
+} else {
+  print("x là số âm")
+}
+```
+### 2.11.2. Vòng lặp for
+
+** for ( value in sequence)**
+
+**{**
+
+**statement**
+
+**}**
+In ra các phần tử của dãy từ 1 đến 7.
+```{r}
+x=1:5
+for ( i in 1:length(x)){
+  print(x[i])
+}
+```
+
+Sinh ngẫu nhiên hai vec tơ cùng độ dài $10$, tính tổng theo công thức $\text{tong} = x^2 + y$
+```{r}
+x=sample(c(2,7,4,6), 10, replace = TRUE)
+y=sample(20:50, 10, replace = TRUE)
+```
+### 2.11.2. Câu lệnh while
+
+**while (condition) {**
+
+**statement**
+
+**}**
+
+### 2.11.3. Viết hàm trong R
+
+**tenham = function(<Các tham số>) {**
+
+**Nội dung của hàm**
+
+**}**
+
+Viết hàm truyền vào một véc tơ x và tính tổng theo công thức $\text{tong} =\sum^{length(x)}_{i=1}x_k^k$ với $x_k$ là vị trí thứ $k$ của véc tơ $x$. (Ví dụ $x=c(2,3,4,5), \text{tong}=2^1+3^2+4^3+5^4$)
+
+```{r}
+
+```
+
+### 2.11.4. Họ hàm apply và ifelse trong R
+
+Trong R, ngoài việc sử dung vòng for để thực hiện thao tác lặp, ta còn có thể sử dụng các hàm **apply() , lapply() , sapply()**. 
+
+Ưu điểm lớn nhất của các hàm này so với sử dụng vòng lặp **for** là giúp code trở nên
+ngắn gọn hơn.
+
+Hàm **apply()** có cấu trúc như sau:
+
+**apply(X, MARGIN, FUN)**
+
+Trong đó:
+
+Trong đó:
+
+- X là một vector hoặc matrix.
+
+- MARGIN: Nếu MARGIN = 1 thì hàm sẽ áp dụng với từng hàng, MARGIN = 2 thì sẽ áp dụng hàm với từng cột.
+
+- FUN: tên của hàm mà ta muốn áp dụng, có thể tự định nghĩa.
+
+Tính tổng các hàng của ma trận:
+```{r}
+A = matrix(1:10, nrow=3, ncol=10)
+A
+apply( A,1,sum)
+```
+Hàm **lapply()** có cấu trúc như sau:
+
+**lapply(X, FUN)**
+
+Với các tham số tương tự như hàm **lapply()**.
+
+Lưu ý rằng hàm **lapply()** luôn trả về kết quả là 1 list.
+```{r}
+names <- c("priyank", "abhiraj","pawananjani", "sudhanshu","devraj")
+lapply(names, toupper)
+```
+Hàm **sapply()** có cấu trúc như sau:
+
+**sapply(X, FUN)**
+
+Với các tham số tương tự như hàm **lapply()**.
+
+Điểm khác biệt của hàm trên so với hàm **lapply()** là hàm trả về vector hoặc matrix.
+```{r}
+sample_data <- data.frame(
+x=c(1,2,3,4,5,6),
+y=c(3,2,4,2,34,5)
+)
+sapply(sample_data, max)
+sapply(sample_data, function(data) {
+return(max(data) - 2*min(data))
+})
+```
+
+Ngoài ra, trong R còn có hàm **ifelse()** như sau:
+
+**ifelse(test, yes, no)**
+
+Trong đó:
+
+- test là 1 biểu thức điều kiện.
+
+- yes là giá trị trả về nếu điều kiện đúng.
+
+- no là giá trị trả về nếu điều kiện sai.
+
+Ưu điểm của hàm **ifelse()**:
+
+- Thay thế cho cấu trúc if...else khi điều kiện đơn giản.
+
+- Hàm có tính vectơ hóa.
+
+```{r}
+a = c(5,7,2,9)
+ifelse(a %% 2 == 0,"even","odd")
+```
+

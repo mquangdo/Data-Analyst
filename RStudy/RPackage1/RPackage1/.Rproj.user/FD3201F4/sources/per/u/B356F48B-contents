@@ -1,0 +1,53 @@
+SoLoi = c(1,2,2,4)
+sum(SoLoi)
+SoLoi = c(2, 3, 0, 5, 1, 0, 7, 0, 2, 7)
+subset(SoLoi, SoLoi<2)
+which.max(SoLoi)
+SoLoi2 = c(1, 0, NA, 5, 2)
+sum(SoLoi2)
+na.omit(SoLoi2)
+SoLoi2
+SoLoi3 = na.omit(SoLoi2)
+SoLoi3
+sum(SoLoi3)
+PhanLoai = SoLoi
+PhanLoai[PhanLoai <5] ='IT'
+PhanLoai[PhanLoai >=5]='BT'
+PhanLoai
+data.frame(SoLoi, PhanLoai)
+PhanLoai = factor(PhanLoai, level=c("IT", "BT",'NHIEU'))
+PhanLoai
+ChieuCao = c(170, 165, 150, 158, 166)
+CanNang = c(65, 50, 45, 60, 53)
+GioiTinh = c("Nam", "Nam", "Nu", "Nu", "Nam")
+DuLieu = data.frame(ChieuCao, CanNang, GioiTinh)
+DuLieu
+View(DuLieu)
+DuLieu = edit(data.frame())
+DuLieu1=DuLieu
+#Đổi tên cho các cột bằng hàm colnames hoặc names
+colnames(DuLieu1) = c("CC","CN","GT")
+DuLieu1#Nhập dữ liệu cột quê quán và cột tuổi
+QueQuan = c("HaNoi", "QuangNinh", "NgheAn", "NamDinh", "LangSon")
+Tuoi = c(23, 22, 20, 25, 19)
+# Ghép hai cột quê quán và tuổi vào bảng dữ liệu
+DuLieu2 = data.frame(DuLieu, QueQuan, Tuoi)
+DuLieu2
+View(DuLieu2)
+DuLieu
+DuLieu3 = edit(DuLieu)
+DuLieu3 = fix(DuLieu)
+DuLieu3['GioiTinh']
+DuLieu3$GioiTinh
+attach(DuLieu3)
+GioiTinh
+DuLieu[,GioiTinh = 'Nu']
+DuLieu
+DuLieu[DuLieu$GioiTinh == "Nam" & DuLieu$ChieuCao > 160,]
+DuLieu3[GioiTinh = "Nu",]
+DuLieu3
+View(DuLieu3)
+DuLieu3["GioiTinh"]
+DuLieu3[GioiTinh =="Nu",]
+DuLieu3[GioiTinh == "Nam",]
+subset(DuLieu3, GioiTinh == " Nu",)
